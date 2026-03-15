@@ -294,7 +294,7 @@
 </head>
 <body>
     <div class="header-oval">
-        <img src="/images/wovenwindlogo.png" alt="Woven Wind Logo" />
+        <img src="images/wovenwindlogo.png" alt="Woven Wind Logo" />
     </div>
 
     <div class="main-content">
@@ -422,7 +422,7 @@
         document.querySelectorAll('.topic-btn').forEach(button => {
             button.addEventListener('click', function () {
                 const topic = this.dataset.topic;
-                window.location.href = `/trivia/${topic}/`;
+                window.location.href = `${topic}/`;
             });
         });
     </script>

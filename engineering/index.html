@@ -436,7 +436,7 @@
 </head>
 <body>
     <div class="header-oval">
-        <img src="/images/wovenwindlogo.png" alt="Woven Wind" />
+        <img src="../images/wovenwindlogo.png" alt="Woven Wind" />
     </div>
 
     <!-- NAME PICKER MODAL -->
@@ -653,7 +653,7 @@
         async function loadQuestions() {
             try {
                 const topic = window.location.pathname.split('/')[2];
-                const response = await fetch(`/trivia/${topic}/questions.csv`);
+                const response = await fetch(`questions.csv`);
                 const data = await response.text();
                 const allLines = data.split('\n').filter(l => l.trim() !== '');
 
@@ -873,7 +873,7 @@
             window.location.reload();
         });
         document.getElementById('homeBtn').addEventListener('click', () => {
-            window.location.href = '/trivia/';
+            window.location.href = '../';
         });
 
         function escHtml(s) {
