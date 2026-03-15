@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia Topics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --blue-light: #9ed3fb;
+            --blue-mid: #7394C5;
+            --blue-dark: #4f678a;
+            --green: #00796b;
+            --bg: #f0f8ff;
+            --white: #ffffff;
+            --text: #1a2a3a;
+            --correct: #2ecc71;
+            --wrong: #e74c3c;
+            --gold: #f4c542;
+            --silver: #aab8c2;
+            --bronze: #cd7f32;
+        }
+
+        body {
+            font-family: 'Nunito', Arial, sans-serif;
+            background-color: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── HEADER ── */
+        .header-oval {
+            background-color: var(--blue-light);
+            width: 100%;
+            height: 130px;
+            border-radius: 0 0 50% 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+            flex-shrink: 0;
+        }
+        .header-oval img { width: 260px; max-width: 70vw; }
+
+        /* ── MAIN LAYOUT ── */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 16px 30px;
+        }
+
+        /* ── SETTINGS ROW ── */
+        .settings-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 18px 0 10px;
+            width: 100%;
+            max-width: 860px;
+        }
+
+        .toggle-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            border: 1.5px solid var(--blue-mid);
+            border-radius: 50px;
+            padding: 10px 22px;
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            user-select: none;
+        }
+        .toggle-pill.active {
+            background: var(--blue-mid);
+            color: var(--white);
+        }
+        .toggle-pill .toggle-icon { font-size: 1.1em; }
+
+        /* ── TOPIC PILL ── */
+        .topic-oval {
+            background-color: var(--blue-mid);
+            border-radius: 50px;
+            padding: 13px 40px;
+            margin: 16px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .pick-topic {
+            text-align: center;
+            color: white;
+            font-size: 1.4em;
+            font-weight: 800;
+        }
+
+        /* ── TOPIC BUTTONS ── */
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            max-width: 860px;
+            width: 100%;
+        }
+        .button-container button:last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+            max-width: 380px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .topic-btn {
+            padding: 22px 20px;
+            background-color: var(--white);
+            color: var(--text);
+            border: 1.5px solid var(--blue-mid);
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.15em;
+            font-weight: 800;
+            transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.15s;
+            min-height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .topic-btn:hover {
+            background-color: var(--blue-mid);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(115,148,197,0.35);
+        }
+        .topic-btn:active { transform: scale(0.97); }
+        .topic-btn .btn-icon { font-size: 1.3em; }
+
+        /* ── LEADERBOARD PANEL ── */
+        .leaderboard-panel {
+            max-width: 860px;
+            width: 100%;
+            margin-top: 20px;
+            background: var(--white);
+            border-radius: 20px;
+            border: 1.5px solid var(--blue-mid);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: none;
+        }
+        .leaderboard-panel.visible { display: block; }
+
+        .lb-header {
+            background: var(--blue-mid);
+            color: white;
+            padding: 14px 24px;
+            font-size: 1.1em;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .lb-filter {
+            display: flex;
+            gap: 6px;
+        }
+        .lb-filter-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.82em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Nunito', sans-serif;
+            transition: background 0.2s;
+        }
+        .lb-filter-btn.active { background: var(--white); color: var(--blue-dark); }
+
+        .lb-body { padding: 12px 0; max-height: 280px; overflow-y: auto; }
+
+        .lb-row {
+            display: flex;
+            align-items: center;
+            padding: 10px 22px;
+            gap: 14px;
+            border-bottom: 1px solid #eef3f8;
+            transition: background 0.15s;
+        }
+        .lb-row:last-child { border-bottom: none; }
+        .lb-row:hover { background: #f5faff; }
+
+        .lb-rank {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.85em;
+            flex-shrink: 0;
+            background: #e8f0fa;
+            color: var(--blue-dark);
+        }
+        .lb-rank.gold   { background: var(--gold); color: #7a5a00; }
+        .lb-rank.silver { background: var(--silver); color: #3a4a52; }
+        .lb-rank.bronze { background: var(--bronze); color: #6b3a1a; }
+
+        .lb-name { flex: 1; font-weight: 700; color: var(--text); font-size: 0.95em; }
+        .lb-topic { font-size: 0.8em; color: #7a8fa0; font-weight: 600; }
+        .lb-score {
+            font-weight: 900;
+            font-size: 1em;
+            color: var(--green);
+        }
+        .lb-pts { font-size: 0.75em; color: #7a8fa0; font-weight: 600; }
+
+        .lb-empty {
+            text-align: center;
+            color: #aab8c2;
+            padding: 30px;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+
+        .lb-clear-btn {
+            display: block;
+            margin: 10px auto 6px;
+            background: none;
+            border: 1px solid #e74c3c44;
+            color: #e74c3c;
+            border-radius: 20px;
+            padding: 5px 18px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.8em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .lb-clear-btn:hover { background: #ffeaea; }
+
+
+
+        /* ── HORIZONTAL LAYOUT ── */
+        @media (orientation: landscape) and (max-height: 600px) {
+            body { flex-direction: row; flex-wrap: wrap; }
+
+            .header-oval {
+                width: 180px;
+                height: 100vh;
+                border-radius: 0 40px 40px 0;
+                position: sticky;
+                top: 0;
+                flex-shrink: 0;
+            }
+            .header-oval img { width: 140px; }
+
+            .main-content {
+                flex: 1;
+                overflow-y: auto;
+                padding: 14px 20px;
+                max-height: 100vh;
+            }
+
+            .button-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .button-container button:last-child:nth-child(odd) {
+                grid-column: auto;
+                max-width: 100%;
+            }
+
+            .settings-row { margin-top: 8px; }
+            .topic-oval { margin: 10px 0; padding: 10px 30px; }
+        }
+
+        @media (max-width: 600px) {
+            .button-container { grid-template-columns: 1fr; }
+            .button-container button:last-child:nth-child(odd) {
+                grid-column: 1;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-oval">
+        <img src="/images/wovenwindlogo.png" alt="Woven Wind Logo" />
+    </div>
+
+    <div class="main-content">
+        <!-- Settings toggles -->
+        <div class="settings-row">
+            <div class="toggle-pill" id="toggleLeaderboard">
+                <span class="toggle-icon">🏆</span> Leaderboard
+            </div>
+
+        </div>
+
+        <div class="topic-oval">
+            <h2 class="pick-topic">Pick a topic</h2>
+        </div>
+
+        <div class="button-container">
+            <button class="topic-btn" data-topic="sustainability"><span class="btn-icon">♻️</span> Sustainability</button>
+            <button class="topic-btn" data-topic="energy"><span class="btn-icon">⚡</span> Energy</button>
+            <button class="topic-btn" data-topic="wind-turbines"><span class="btn-icon">🌬️</span> Wind Turbines</button>
+            <button class="topic-btn" data-topic="engineering"><span class="btn-icon">⚙️</span> Engineering</button>
+            <button class="topic-btn" data-topic="random"><span class="btn-icon">🎲</span> Random</button>
+        </div>
+
+        <!-- Leaderboard Panel -->
+        <div class="leaderboard-panel" id="leaderboardPanel">
+            <div class="lb-header">
+                <span>🏆 Leaderboard</span>
+                <div class="lb-filter">
+                    <button class="lb-filter-btn active" data-filter="all">All</button>
+                    <button class="lb-filter-btn" data-filter="sustainability">Sustainability</button>
+                    <button class="lb-filter-btn" data-filter="energy">Energy</button>
+                    <button class="lb-filter-btn" data-filter="wind-turbines">Wind</button>
+                    <button class="lb-filter-btn" data-filter="engineering">Engineering</button>
+                </div>
+            </div>
+            <div class="lb-body" id="lbBody">
+                <div class="lb-empty">No scores yet — play a round!</div>
+            </div>
+            <button class="lb-clear-btn" id="lbClearBtn">🗑 Clear scores</button>
+        </div>
+
+
+    </div>
+
+    <script>
+        // ── Toggle panels ──
+        function makeToggle(btnId, panelId) {
+            const btn = document.getElementById(btnId);
+            const panel = document.getElementById(panelId);
+            btn.addEventListener('click', () => {
+                const on = btn.classList.toggle('active');
+                panel.classList.toggle('visible', on);
+            });
+        }
+        makeToggle('toggleLeaderboard', 'leaderboardPanel');
+
+        // ── Leaderboard rendering ──
+        const RANK_CLASSES = ['gold', 'silver', 'bronze'];
+
+        function loadLeaderboard(filter = 'all') {
+            const raw = JSON.parse(localStorage.getItem('ww_leaderboard') || '[]');
+            const filtered = filter === 'all' ? raw : raw.filter(e => e.topic === filter);
+
+            // Merge all entries by name — sum points, correct, and total across rounds
+            const merged = {};
+            filtered.forEach(e => {
+                const key = e.name.toLowerCase();
+                if (!merged[key]) {
+                    merged[key] = { name: e.name, points: 0, correct: 0, total: 0, rounds: 0 };
+                }
+                merged[key].points  += e.points;
+                merged[key].correct += e.correct;
+                merged[key].total   += e.total;
+                merged[key].rounds  += 1;
+            });
+
+            const scores = Object.values(merged).sort((a, b) => b.points - a.points);
+
+            const body = document.getElementById('lbBody');
+            if (scores.length === 0) {
+                body.innerHTML = '<div class="lb-empty">No scores yet — play a round!</div>';
+                return;
+            }
+
+            body.innerHTML = scores.slice(0, 20).map((entry, i) => {
+                const rankClass = RANK_CLASSES[i] || '';
+                const roundLabel = entry.rounds === 1 ? '1 round' : `${entry.rounds} rounds`;
+                return `
+                    <div class="lb-row">
+                        <div class="lb-rank ${rankClass}">${i + 1}</div>
+                        <div class="lb-name">${escHtml(entry.name)}</div>
+                        <div class="lb-topic" style="font-size:0.78em;color:#aab8c2;">${roundLabel}</div>
+                        <div>
+                            <span class="lb-score">${entry.points}</span>
+                            <span class="lb-pts"> pts</span>
+                        </div>
+                        <div style="font-size:0.8em;color:#aab8c2;">${entry.correct}/${entry.total} correct</div>
+                    </div>`;
+            }).join('');
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.lb-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lb-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadLeaderboard(btn.dataset.filter);
+            });
+        });
+
+        document.getElementById('lbClearBtn').addEventListener('click', () => {
+            if (confirm('Clear all saved scores?')) {
+                localStorage.removeItem('ww_leaderboard');
+                loadLeaderboard();
+            }
+        });
+
+        loadLeaderboard();
+
+        // ── Topic navigation ──
+        document.querySelectorAll('.topic-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const topic = this.dataset.topic;
+                window.location.href = `/trivia/${topic}/`;
+            });
+        });
+    </script>
+</body>
+</html>
