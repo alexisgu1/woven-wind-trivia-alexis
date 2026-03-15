@@ -505,7 +505,7 @@
             <div class="progress-row">
                 <div class="question-counter" id="questionCounter">Question 1/10</div>
                 <div class="difficulty-badge easy" id="diffBadge">Easy</div>
-                <div class="score-pill">⚡ <span class="score-pts" id="livePoints">0</span> pts</div>
+                <div class="score-pill"> <span class="score-pts" id="livePoints">0</span> pts</div>
             </div>
             <div class="progress-bar-track">
                 <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
@@ -835,7 +835,7 @@
             document.getElementById('scoreDisplay').textContent =
                 `${score} out of ${totalQuestions} correct`;
             document.getElementById('pointsDisplay').textContent =
-                `⚡ ${points} points`;
+                ` ${points} points`;
 
             // Breakdown by difficulty
             const counts = { easy: 0, medium: 0, hard: 0 };
