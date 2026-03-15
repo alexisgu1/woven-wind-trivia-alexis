@@ -442,7 +442,7 @@
     <!-- NAME PICKER MODAL -->
     <div class="modal-overlay" id="nameModal">
         <div class="modal-box">
-            <h2>Pick your name! 🎉</h2>
+            <h2>Pick your name!</h2>
             <p>Choose a color, animal, and number — your scores stay private.</p>
             <div class="name-dropdowns">
                 <select class="name-select" id="colorSelect">
@@ -504,7 +504,7 @@
         <div class="progress-area" id="progressArea">
             <div class="progress-row">
                 <div class="question-counter" id="questionCounter">Question 1/10</div>
-                <div class="difficulty-badge easy" id="diffBadge">⭐ Easy</div>
+                <div class="difficulty-badge easy" id="diffBadge">Easy</div>
                 <div class="score-pill">⚡ <span class="score-pts" id="livePoints">0</span> pts</div>
             </div>
             <div class="progress-bar-track">
@@ -555,7 +555,7 @@
         let answered    = false;
 
         const POINTS = { easy: 1, medium: 3, hard: 5 };
-        const DIFF_LABEL = { easy: '⭐ Easy', medium: '🔥 Medium', hard: '💀 Hard' };
+        const DIFF_LABEL = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
 
         // ══════════════════════════════════════════
         //  DOM REFS
@@ -737,7 +737,7 @@
             livePoints.textContent = points;
 
             // Difficulty badge
-            diffBadge.textContent = DIFF_LABEL[difficulty] || '🔥 Medium';
+            diffBadge.textContent = DIFF_LABEL[difficulty] || 'Medium';
             diffBadge.className   = `difficulty-badge ${difficulty}`;
 
             // Question text
