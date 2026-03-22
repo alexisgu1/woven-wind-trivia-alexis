@@ -388,44 +388,7 @@
         .home-btn { background: var(--white); color: var(--text); border: 1.5px solid var(--blue-mid); }
         .home-btn:hover { background: #e8f0fa; transform: translateY(-2px); }
 
-        /* ══════════ HORIZONTAL / LANDSCAPE LAYOUT ══════════ */
-        @media (orientation: landscape) and (max-height: 600px) {
-            body { flex-direction: row; }
 
-            .header-oval {
-                width: 140px;
-                height: 100vh;
-                border-radius: 0 40px 40px 0;
-                position: sticky;
-                top: 0;
-                flex-shrink: 0;
-            }
-            .header-oval img { width: 110px; }
-
-            .quiz-wrapper {
-                flex: 1;
-                max-height: 100vh;
-                overflow-y: auto;
-                padding: 10px 16px 16px;
-                /* side-by-side layout for question + answers */
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto auto 1fr auto;
-                align-content: start;
-                column-gap: 20px;
-            }
-
-            .progress-area     { grid-column: 1 / -1; margin: 8px 0 6px; }
-            .question-box      { grid-column: 1; grid-row: 2 / 5; align-self: start; margin-bottom: 0; font-size: 1em; min-height: 60px; }
-            .correct-reveal    { grid-column: 2; grid-row: 2; }
-            .answers-container { grid-column: 2; grid-row: 3; margin-bottom: 0; gap: 10px; }
-            .next-btn          { grid-column: 2; grid-row: 4; justify-self: center; margin-top: 8px; padding: 10px 30px; font-size: 0.95em; }
-
-            .answer-btn { min-height: 54px; font-size: 0.9em; padding: 12px 12px; }
-            .question-box { padding: 18px 20px; }
-
-            .completion-screen { grid-column: 1 / -1; }
-        }
 
         /* ── NARROW MOBILE ── */
         @media (max-width: 480px) {
@@ -442,7 +405,7 @@
     <!-- NAME PICKER MODAL -->
     <div class="modal-overlay" id="nameModal">
         <div class="modal-box">
-            <h2>Pick your name!</h2>
+            <h2>Pick your name! 🎉</h2>
             <p>Choose a color, animal, and number — your scores stay private.</p>
             <div class="name-dropdowns">
                 <select class="name-select" id="colorSelect">
@@ -504,8 +467,8 @@
         <div class="progress-area" id="progressArea">
             <div class="progress-row">
                 <div class="question-counter" id="questionCounter">Question 1/10</div>
-                <div class="difficulty-badge easy" id="diffBadge">Easy</div>
-                <div class="score-pill"> <span class="score-pts" id="livePoints">0</span> pts</div>
+                <div class="difficulty-badge easy" id="diffBadge">⭐ Easy</div>
+                <div class="score-pill">⚡ <span class="score-pts" id="livePoints">0</span> pts</div>
             </div>
             <div class="progress-bar-track">
                 <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
@@ -555,7 +518,7 @@
         let answered    = false;
 
         const POINTS = { easy: 1, medium: 3, hard: 5 };
-        const DIFF_LABEL = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+        const DIFF_LABEL = { easy: '⭐ Easy', medium: '🔥 Medium', hard: '💀 Hard' };
 
         // ══════════════════════════════════════════
         //  DOM REFS
@@ -737,7 +700,7 @@
             livePoints.textContent = points;
 
             // Difficulty badge
-            diffBadge.textContent = DIFF_LABEL[difficulty] || 'Medium';
+            diffBadge.textContent = DIFF_LABEL[difficulty] || '🔥 Medium';
             diffBadge.className   = `difficulty-badge ${difficulty}`;
 
             // Question text
@@ -835,7 +798,7 @@
             document.getElementById('scoreDisplay').textContent =
                 `${score} out of ${totalQuestions} correct`;
             document.getElementById('pointsDisplay').textContent =
-                ` ${points} points`;
+                `⚡ ${points} points`;
 
             // Breakdown by difficulty
             const counts = { easy: 0, medium: 0, hard: 0 };
