@@ -260,12 +260,12 @@
             }
         }
 
-        /* ── TCL TAB 7 LANDSCAPE (1024×600) — compact to avoid overflow ── */
+        /* ── MOBILE/TABLET LANDSCAPE — fit exact viewport height ── */
         @media (orientation: landscape) and (max-height: 650px) {
-            body { min-height: 0; }
-            .header-oval { height: 75px; }
+            html, body { height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }
+            .header-oval { height: 75px; flex-shrink: 0; }
             .header-oval img { width: 160px; }
-            .main-content { padding: 10px 16px 16px; }
+            .main-content { padding: 10px 16px 16px; flex: 1; min-height: 0; justify-content: space-between; overflow-y: auto; }
             .settings-row { margin: 8px 0 6px; }
             .toggle-pill { padding: 7px 18px; font-size: 0.88em; }
             .topic-oval { padding: 8px 30px; margin: 8px 0; }
