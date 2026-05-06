@@ -255,7 +255,29 @@
             text-align: center;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
             animation: modalIn 0.3s ease;
+            position: relative;
         }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: #f0f8ff;
+            color: var(--blue-dark);
+            font-size: 1.2em;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Nunito', sans-serif;
+            transition: background 0.2s, color 0.2s;
+            line-height: 1;
+        }
+        .modal-close:hover { background: var(--blue-mid); color: white; }
         @keyframes modalIn {
             from { opacity: 0; transform: scale(0.88) translateY(16px); }
             to   { opacity: 1; transform: scale(1)    translateY(0); }
@@ -395,6 +417,44 @@
             .answers-container { grid-template-columns: 1fr; }
             .question-box { font-size: 1.05em; padding: 20px; }
         }
+
+        /* ── TCL TAB 7 LANDSCAPE (1024×600) — compact to avoid overflow ── */
+        @media (orientation: landscape) and (max-height: 650px) {
+            body { min-height: 0; }
+            .header-oval { height: 70px; }
+            .header-oval img { width: 150px; }
+            .quiz-wrapper { padding: 8px 16px 12px; }
+            .progress-area { margin: 6px 0 6px; }
+            .progress-row { margin-bottom: 4px; }
+            .question-counter { padding: 5px 16px; font-size: 0.88em; }
+            .score-pill { padding: 5px 14px; font-size: 0.82em; }
+            .difficulty-badge { padding: 4px 12px; font-size: 0.74em; }
+            .question-box {
+                padding: 14px 18px;
+                font-size: 1em;
+                min-height: 0;
+                margin-bottom: 10px;
+            }
+            .answers-container { gap: 10px; margin-bottom: 10px; }
+            .answer-btn {
+                padding: 10px 12px;
+                min-height: 50px;
+                font-size: 0.92em;
+            }
+            .next-btn { padding: 9px 30px; font-size: 1em; margin-top: 0; }
+            .correct-reveal { padding: 8px 16px; font-size: 0.9em; margin-bottom: 8px; }
+            .modal-box { padding: 22px 24px 20px; max-width: 460px; }
+            .modal-box h2 { font-size: 1.3em; }
+            .modal-box p { font-size: 0.88em; margin-bottom: 14px; }
+            .name-dropdowns { flex-wrap: nowrap; gap: 8px; margin-bottom: 12px; }
+            .name-select { padding: 8px 8px; font-size: 0.9em; padding-right: 24px; }
+            .name-preview { padding: 8px 14px; min-height: 40px; font-size: 1.05em; margin-bottom: 12px; }
+            .modal-submit { padding: 10px 30px; font-size: 1em; }
+            .completion-oval { padding: 22px 26px; }
+            .completion-oval h2 { font-size: 1.5em; }
+            .points-display { font-size: 1.7em; }
+            .score-display { font-size: 1.1em; margin: 6px 0; }
+        }
     </style>
 </head>
 <body>
@@ -405,7 +465,8 @@
     <!-- NAME PICKER MODAL -->
     <div class="modal-overlay" id="nameModal">
         <div class="modal-box">
-            <h2>Pick your name! 🎉</h2>
+            <button class="modal-close" id="nameModalClose" aria-label="Close">×</button>
+            <h2>Pick your name!</h2>
             <p>Choose a color, animal, and number — your scores stay private.</p>
             <div class="name-dropdowns">
                 <select class="name-select" id="colorSelect">
@@ -467,8 +528,8 @@
         <div class="progress-area" id="progressArea">
             <div class="progress-row">
                 <div class="question-counter" id="questionCounter">Question 1/10</div>
-                <div class="difficulty-badge easy" id="diffBadge">⭐ Easy</div>
-                <div class="score-pill">⚡ <span class="score-pts" id="livePoints">0</span> pts</div>
+                <div class="difficulty-badge easy" id="diffBadge">Easy</div>
+                <div class="score-pill"><span class="score-pts" id="livePoints">0</span> pts</div>
             </div>
             <div class="progress-bar-track">
                 <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
@@ -493,13 +554,13 @@
         <!-- Completion screen -->
         <div class="completion-screen" id="completionScreen">
             <div class="completion-oval">
-                <h2>🎉 Quiz Complete!</h2>
+                <h2>Quiz Complete!</h2>
                 <div class="score-display" id="scoreDisplay"></div>
                 <div class="points-display" id="pointsDisplay"></div>
                 <div class="breakdown" id="breakdownArea"></div>
                 <div class="action-row">
                     <button class="play-again-btn" id="playAgainBtn">Play Again</button>
-                    <button class="home-btn" id="homeBtn">🏠 Home</button>
+                    <button class="home-btn" id="homeBtn">Home</button>
                 </div>
             </div>
         </div>
@@ -518,7 +579,7 @@
         let answered    = false;
 
         const POINTS = { easy: 1, medium: 3, hard: 5 };
-        const DIFF_LABEL = { easy: '⭐ Easy', medium: '🔥 Medium', hard: '💀 Hard' };
+        const DIFF_LABEL = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
 
         // ══════════════════════════════════════════
         //  DOM REFS
@@ -587,6 +648,10 @@
         }
 
         document.getElementById('nameSubmit').addEventListener('click', startQuiz);
+
+        document.getElementById('nameModalClose').addEventListener('click', () => {
+            window.location.href = '../';
+        });
 
         // ══════════════════════════════════════════
         //  CSV PARSING
@@ -700,7 +765,7 @@
             livePoints.textContent = points;
 
             // Difficulty badge
-            diffBadge.textContent = DIFF_LABEL[difficulty] || '🔥 Medium';
+            diffBadge.textContent = DIFF_LABEL[difficulty] || 'Medium';
             diffBadge.className   = `difficulty-badge ${difficulty}`;
 
             // Question text
@@ -798,7 +863,7 @@
             document.getElementById('scoreDisplay').textContent =
                 `${score} out of ${totalQuestions} correct`;
             document.getElementById('pointsDisplay').textContent =
-                `⚡ ${points} points`;
+                `${points} points`;
 
             // Breakdown by difficulty
             const counts = { easy: 0, medium: 0, hard: 0 };
